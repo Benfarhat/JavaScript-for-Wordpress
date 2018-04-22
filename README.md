@@ -111,7 +111,67 @@ define('DB_HOST', 'ADRESSE IP DE LA MACHINE EXECUTANT LE SERVEUR DE BASE DE DONN
 
 Les fichiers de notre installation sont dans 3 répertoire dont wp-content. Ce dernier est celui qui vous permettra d'étendre les fonctionalités de wordpress via les plugins (repertoire wp-content/plugins) ou de modifier l'apparence via les thèmes (repertoire wp-content/themes)
 
-En tant que développeur vous aurez besoin d'avoir sur votre installation des données de travail (fake ou dummy data) permettant de [tester votre thème](https://codex.wordpress.org/Theme_Development#Theme_Testing_Process), il existe un fichier dit Thème Unit Test Data qui est un [fichier XML](https://raw.githubusercontent.com/WPTRT/theme-unit-test/master/themeunittestdata.wordpress.xml) dit WordPress eXtended RSS ayant un format particulier et compréhensible par wordpress (WXRà, vous pouvez importer ce fichier via tools > import > WordPress Si vous ne voyez pas de lien vers "Run Importer" cliquer sur "Install Now" près de Wordpress pour installer le module d'import.
+En tant que développeur vous aurez besoin d'avoir sur votre installation des données de travail (fake ou dummy data) permettant de [tester votre thème](https://codex.wordpress.org/Theme_Development#Theme_Testing_Process), il existe un fichier dit Thème Unit Test Data qui est un [fichier XML](https://raw.githubusercontent.com/WPTRT/theme-unit-test/master/themeunittestdata.wordpress.xml) dit WordPress eXtended RSS ayant un format particulier et compréhensible par wordpress (WXR), vous pouvez importer ce fichier via tools > import > WordPress Si vous ne voyez pas de lien vers "Run Importer" cliquer sur "Install Now" près de Wordpress pour installer le module d'import.
 En cliquant sur Run importer vous avez juste a sélectionner le fichier xml téléchargé et cliquer sur le bouton "import file and import". Puisque le fichier comportera des articles, il vous sera demander si vous voulez automatiquement créer les noms des auteurs trouvés dans le fichier XML ou d'utiliser un des utiliateurs existant dans votre installation. Puis vous pouvez également importer les attachements (lien vers un fichier externe) et au final valider en cliquant sur "submit"
 
  ![](images/import1.png)
+ ![](images/import2.png)
+
+ Ca nous permet ainsi de passer d'un site ne comportant qu'un seul article (le fameux Hello world!)
+ 
+ ![](images/wxr-before.png)
+
+ à un site plus "complet" comportant des posts (articles), des pages, des commentaires,  des catégories, des tags (mots clés) mais également différentes éléments typographiques (listes, blockquotes, lien, titre h1, h2, h3, ..., des tableaux, ect ...) à plusieurs dates différentes
+  
+ ![](images/wxr-after.png)
+ 
+ > NB: La différence entre une page et un article c'est l'affectation d'un date. Si par exemple vous désirez créer un élément qui présentera une société ou fournira les éléments de contacts, alors vous n'avez pas besoin d'y rajoutez la date de publication, on parle alors de page, si par contre vous désirez mettre en ligne un autre élément qui parle d'une formation, d'un séminaire, d'une activité entre les développeurs de la société ou alors d'une présentation d'un technologie ou solution, il serait bon d'y rajouter la date de publication, parce que les évenements ont une date mais les technologies en ont une indirectement. Qui n'a pas consulté un site discutant par exemple de ReactJS ou PHP sans consulter la date de publication histoire de savoir si c'est toujours d'actualité ou si ce qui est inscrit est déprécié?
+
+ # Les thèmes
+
+ ## création d'un thème
+
+ Créons notre premier thème en nous basant sur cette [page](https://codex.wordpress.org/Blog_Design_and_Layout) du Codex de wordpress
+
+ Les fichiers de notre thèmes seront dans un répertoire sous wp-content/themes/, créeons donc notre thème que vous appelerez comme vous voulez (nom de votre société, sujet du thème, nom propre à votre thème en tant que produit, etc...), dans mon cas je vais simplement l'appeler "Tunisia"
+ 
+ il doit avoir bien sur un style (style.css) des fichier de template en php (qui contrôle comment le contenu des pages seront générés) et le fichier functions.php (qui permet de controler les fonctionalités du thème)
+
+ Les détails du thème seront inclus en tant que commentaires dans le fichier style.css, par exemple:
+
+ /*
+Theme Name:Tunisia
+Author: Benfarhat Elyes
+Author URI: https://github.com/Benfarhat
+Description: Wordpress for JS developper
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: javascript, reactjs
+Text Domain: tunisia
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+Il est également possible d'avoir un fichier screenshot.png qui vous permettra d'avoir un apercu du thème via le panneau d'administration. 
+
+Par defaut il nous faut un fichier index.php, il peut contenir l'ensemble du code générant les pages de votre site MAIS... a moins de faire un site vitrine contenant des informations très basic (comme l'adresse et l'email de contact), il vaut mieux subdiviser votre site en partie. Si vous avez fait du React, cela ressemble fortement au subdivision pour avoir un composant qui s'occupe du header, un autre du footer, l'autre de la sidebar etc ..
+
+Vous pouvez dans votre fichier index.php mettre ceci:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tunisia</title>
+</head>
+<body>
+    Bienvenue
+</body>
+</html>
+```
+en activant ce thème vous aurez une page vide contenant le mot "Bienvenue"
