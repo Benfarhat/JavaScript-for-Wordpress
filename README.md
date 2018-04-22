@@ -175,3 +175,187 @@ Vous pouvez dans votre fichier index.php mettre ceci:
 </html>
 ```
 en activant ce thème vous aurez une page vide contenant le mot "Bienvenue"
+
+Nous allons le paufiner en rajouter ce qu'on appelle des template tag, qui se résumé à des fonctions qui vont faire un traitement et vous retourner quelque chose à insérer dans votre page, par exemple `bloginfo( 'description' );` vous affichera la description de votre thème, `wp_head();` est une fonction que vous pouvez "configurer" dans functions.php pour par exemple insérer de nouveaux styles, des metas, etc...
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+    <?php wp_head(); ?>
+  </head>
+  <body <?php body_class(); ?>>
+
+    <div id="page">
+
+      <a href="#content" class="skip-link screen-reader-text">
+        <?php esc_html_e( 'Skip to content', 'tunisia' ); ?>
+      </a>
+
+      <header id="masthead" class="site-header" role="banner">
+
+        <div class="site-branding">
+          <p class="site-title">
+            <a href="<?php echo esc_url( home_url() ) ;?>" rel="home">
+              <?php bloginfo( 'name' ); ?>
+            </a>
+          </p>
+          <p class="site-description" >
+            <?php bloginfo( 'description' ); ?>
+          </p>
+        </div>
+
+        <nav id="site-navigation" class="main-navigation" role="navigation">
+          <?php
+            $args = [ 'theme_location' => 'main-menu' ];
+            wp_nav_menu( $args );
+          ?>
+        </nav>
+
+      </header>
+
+      <div id="content" class="site-content">
+
+        <div id="primary" class="content-area">
+
+    <main id="main" class="site-main" role="main">
+
+      <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+
+        <article id="post-<?php the_ID(); ?>"  <?php post_class(); ?>>
+
+          <header class="entry-header">
+
+            <?php the_title(); ?>
+
+          </header>
+
+          <div class="entry-content">
+
+            <?php the_content(); ?>
+
+          </div>
+
+        </article>
+
+      <?php endwhile; endif; ?>
+
+    </main>
+
+  </div>
+
+<?php
+if( ! is_active_sidebar( 'main-sidebar' ) ) {
+  return;
+}
+?>
+
+<aside id="secondary" class="widget-area" role="complementary">
+
+  <?php dynamic_sidebar( 'main-sidebar' ); ?>
+
+</aside>
+
+
+  </div><!-- #content -->
+
+  <footer id="colophon" class="site-footer" role="contentinfo">
+
+    <a href="<?php echo esc_url( __( 'https://wordpress.org/', 'tunisia' ) ); ?>">
+      <?php printf( esc_html__( 'Proudly powered by %s', 'tunisia' ), 'WordPress' ); ?>
+    </a>
+
+  </footer>
+
+</div><!-- #page -->
+
+<?php wp_footer(); ?>
+
+</body>
+</html>
+
+```
+
+Voili voilou, à présent subdivisons notre page en plusieurs blocks à savoir:
+
+- Le header: tout ce qui est avant la balise body
+    - la fonction <?php get_header(); ?> permet de charger automatiquement le contenu de la page header.php
+- La sidebar: tout ce qui est en latéral et dans laquelle via l'administration de wordpress nous pourrons rajouter des modules (comme un calendrier, un nuage de tags ou encore un apercu de la météo dans le zone ou se trouve l'ip du visiteur)
+    - la fonction <?php get_sidebar(); ?> permet de charger le contenu de sidebar.php
+- Le footer: qui est le bas de page
+    - la fonction <?php get_footer(); ?> permettra d'appeler le contenu de footer.php
+
+Cela nous donne un fichier index.php comme suit:
+
+```
+<?php get_header(); ?>
+
+    <div id="page">
+
+      <a href="#content" class="skip-link screen-reader-text">
+        <?php esc_html_e( 'Skip to content', 'tunisia' ); ?>
+      </a>
+
+      <header id="masthead" class="site-header" role="banner">
+
+        <div class="site-branding">
+          <p class="site-title">
+            <a href="<?php echo esc_url( home_url() ) ;?>" rel="home">
+              <?php bloginfo( 'name' ); ?>
+            </a>
+          </p>
+          <p class="site-description" >
+            <?php bloginfo( 'description' ); ?>
+          </p>
+        </div>
+
+        <nav id="site-navigation" class="main-navigation" role="navigation">
+          <?php
+            $args = [ 'theme_location' => 'main-menu' ];
+            wp_nav_menu( $args );
+          ?>
+        </nav>
+
+      </header>
+
+      <div id="content" class="site-content">
+
+        <div id="primary" class="content-area">
+
+    <main id="main" class="site-main" role="main">
+
+      <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+
+        <article id="post-<?php the_ID(); ?>"  <?php post_class(); ?>>
+
+          <header class="entry-header">
+
+            <?php the_title(); ?>
+
+          </header>
+
+          <div class="entry-content">
+
+            <?php the_content(); ?>
+
+          </div>
+
+        </article>
+
+      <?php endwhile; endif; ?>
+
+    </main>
+
+  </div>
+
+<?php get_sidebar(); ?>
+
+<?php get_footer(); ?>
+
+```
+
+Par rapport au fichier style.css, notez que wordpress ajoute un certain nombre de classe par exemple pour les dates, pour les commentaires, etc
+Il est possible de les réecrire (leur redonner un autre nom de classe) via le fichier functions.php ou utiliser les classes par défaut.
